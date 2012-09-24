@@ -1,0 +1,217 @@
+<!DOCTYPE html>  <html> <head>   <title>ryu.coffee</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               ryu.coffee             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>ryu is a simple control-flow library for node.js</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>LICENSE</h2>
+
+<p>The MIT License (MIT)
+ Copyright (c) 2012 Shogo Kawase <a href="&#x6D;&#97;&#105;&#108;&#116;&#x6F;:&#115;&#104;&#111;&#103;o&#64;&#115;&#116;&#x75;&#x64;&#x69;&#x6F;&#x66;&#x6C;&#x79;.&#x6E;&#101;&#x74;">&#115;&#104;&#111;&#103;o&#64;&#115;&#116;&#x75;&#x64;&#x69;&#x6F;&#x66;&#x6C;&#x79;.&#x6E;&#101;&#x74;</a></p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h2>ryu.chain()</h2>
+
+<pre><code>Create an object has method `build`
+  @param {String} [chainName] - Optional. Name of chain.
+                                default is 'nameless'.
+  @returns {Object} - An object has method `build`
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">exports.chain = </span><span class="nf">(chainName = &#39;nameless&#39;) -&gt;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h3>build(): Function</h3>
+
+<pre><code>Build `chained-function`.
+  @public
+  @param {Function} steps... - Required. Functions to execute.
+  @returns {Function} - Function that executes chained functions.
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">build: </span><span class="nf">(steps...) -&gt;</span>
+    <span class="k">if</span> <span class="nx">steps</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">ChainError</span> <span class="s">&#39;Cannot create empty chain.&#39;</span>
+    <span class="k">for</span> <span class="nx">step</span> <span class="k">in</span> <span class="nx">steps</span>
+      <span class="k">if</span> <span class="k">typeof</span> <span class="nx">step</span> <span class="o">!=</span> <span class="s">&#39;function&#39;</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">TypeError</span> <span class="s">&quot;</span><span class="si">#{</span><span class="k">typeof</span> <span class="nx">step</span><span class="si">}</span><span class="s"> is not a function.&quot;</span>
+    <span class="nv">callback = </span><span class="nx">steps</span><span class="p">.</span><span class="nx">pop</span><span class="p">()</span>
+    <span class="nv">chain = </span><span class="k">new</span> <span class="nx">Chain</span><span class="p">(</span><span class="nx">chainName</span><span class="p">,</span> <span class="nx">steps</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nf">(args...) -&gt;</span> <span class="nx">chain</span><span class="p">.</span><span class="nx">start</span> <span class="nx">args</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Context</h2>
+
+<pre><code>Context for step function.
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Context</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <h3>name</h3>
+
+<pre><code>Name of chain.
+  @public
+  @type String
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">name: </span><span class="kc">null</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h3>data</h3>
+
+<pre><code>An object to store any objects in step functions.
+  @public
+  @type Object
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">data: </span><span class="kc">null</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <h3>step</h3>
+
+<pre><code>Index of current step.
+  @public
+  @type Number
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">step: </span><span class="kc">null</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h3>private members</h3>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">_chain: </span><span class="kc">null</span>
+  <span class="nv">_state: </span><span class="kc">null</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h3>constructor()</h3>
+
+<pre><code>  @param {Chain}  chain - Required. An instance of Chain.
+  @param {Object} state - Required. An object stores state of step.
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">constructor: </span><span class="nf">(chain, state) -&gt;</span>
+    <span class="vi">@name = </span><span class="nx">chain</span><span class="p">.</span><span class="nx">name</span>
+    <span class="vi">@data = </span><span class="p">{}</span>
+    <span class="vi">@step = </span><span class="mi">0</span>
+    <span class="vi">@_chain = </span><span class="nx">chain</span>
+    <span class="vi">@_state = </span><span class="nx">state</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <h3>next(): void</h3>
+
+<pre><code>Start next step when current step completed.
+  @public
+  @param {Object} [args...]: Optional. Arguments for next step.
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">next: </span><span class="nf">(args...) -&gt;</span>
+    <span class="nv">state = </span><span class="nx">@_checkState</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">state</span><span class="p">.</span><span class="nx">asyncCalled</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">ChainError</span> <span class="s">&quot;async() already called at chain `</span><span class="si">#{</span><span class="nx">@_chain</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="s">`.&quot;</span>
+    <span class="nv">state.nextCalled = </span><span class="kc">true</span>
+    <span class="nv">state.args = </span><span class="nx">args</span>
+    <span class="k">return</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h3>last(): void</h3>
+
+<pre><code>Start last step when current step completed.
+  @public
+  @param {Object} [args...] - Optional. Arguments for next step.
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">last: </span><span class="nf">(args...) -&gt;</span>
+    <span class="nv">state = </span><span class="nx">@_checkState</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nx">state</span><span class="p">.</span><span class="nx">asyncCalled</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">ChainError</span> <span class="s">&quot;async() already called at chain `</span><span class="si">#{</span><span class="nx">@_chain</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="s">`.&quot;</span>
+    <span class="nv">state.lastCalled = </span><span class="kc">true</span>
+    <span class="nv">state.args = </span><span class="nx">args</span>
+    <span class="k">return</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h3>async(): Function</h3>
+
+<pre><code>Create callback function for asynchronous function.
+  @public
+  @param {Object} [object] - Optional.
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">async: </span><span class="nf">(options) -&gt;</span>
+    <span class="nv">state = </span><span class="nx">@_checkState</span><span class="p">()</span>
+    <span class="nv">state.asyncCalled = </span><span class="kc">true</span>
+    <span class="nv">index = </span><span class="nx">state</span><span class="p">.</span><span class="nx">asyncCount</span><span class="o">++</span>
+    <span class="nv">options = </span><span class="nx">@_createAsyncOptions</span> <span class="nx">options</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">args</span><span class="p">...)</span> <span class="o">=&gt;</span>
+      <span class="k">if</span> <span class="nx">err</span>
+        <span class="k">return</span> <span class="nx">@_chain</span><span class="p">.</span><span class="nx">onFailure</span> <span class="nx">@</span><span class="p">,</span> <span class="nx">err</span>
+      <span class="nx">unless</span> <span class="nx">options</span><span class="p">.</span><span class="nx">useArray</span>
+        <span class="nv">args = </span><span class="nx">args</span><span class="p">[</span><span class="nx">options</span><span class="p">.</span><span class="nx">index</span><span class="p">]</span>
+      <span class="nx">state</span><span class="p">.</span><span class="nx">args</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">args</span>
+      <span class="k">if</span> <span class="o">++</span><span class="nx">state</span><span class="p">.</span><span class="nx">asyncCompleteCount</span> <span class="o">&gt;=</span> <span class="nx">state</span><span class="p">.</span><span class="nx">asyncCount</span>
+        <span class="nx">@_chain</span><span class="p">.</span><span class="nx">wait</span> <span class="nx">@</span><span class="p">,</span> <span class="nx">state</span>
+      <span class="k">return</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3>_checkState(): Object</h3>
+
+<pre><code>  @private
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">_checkState: </span><span class="o">-&gt;</span>
+    <span class="nv">state = </span><span class="nx">@_state</span>
+    <span class="k">if</span> <span class="nx">state</span><span class="p">.</span><span class="nx">nextCalled</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">ChainError</span> <span class="s">&quot;next() already called at chain `</span><span class="si">#{</span><span class="nx">@_chain</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="s">`.&quot;</span>
+    <span class="k">if</span> <span class="nx">state</span><span class="p">.</span><span class="nx">lastCalled</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nx">ChainError</span> <span class="s">&quot;last() already called at chain `</span><span class="si">#{</span><span class="nx">@_chain</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="s">`.&quot;</span>
+    <span class="k">return</span> <span class="nx">state</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <h3>_createAsyncOptions(): Object</h3>
+
+<pre><code>  @private
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nv">_createAsyncOptions: </span><span class="nf">(options) -&gt;</span>
+    <span class="k">if</span> <span class="nx">options</span> <span class="o">is</span> <span class="kc">null</span> <span class="o">or</span> <span class="nx">options</span> <span class="o">is</span> <span class="kc">undefined</span> <span class="k">then</span> <span class="k">return</span> <span class="p">{</span><span class="nv">index: </span><span class="mi">0</span><span class="p">}</span>
+    <span class="k">if</span> <span class="k">typeof</span> <span class="nx">options</span> <span class="o">is</span> <span class="s">&#39;number&#39;</span> <span class="k">then</span> <span class="k">return</span> <span class="p">{</span><span class="nv">index: </span><span class="nx">options</span><span class="p">}</span>
+    <span class="k">if</span> <span class="nx">options</span><span class="p">.</span><span class="nx">useArray</span> <span class="k">then</span> <span class="k">return</span> <span class="p">{</span><span class="nv">useArray: </span><span class="kc">true</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="nv">index: </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">index</span> <span class="o">?</span> <span class="mi">0</span><span class="p">)}</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h2>Chain</h2>
+
+<pre><code>Chained functions container
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="k">class</span> <span class="nx">Chain</span>
+  <span class="nv">name: </span><span class="kc">null</span>
+  <span class="nv">_steps: </span><span class="kc">null</span>
+  <span class="nv">_callback: </span><span class="kc">null</span>
+  <span class="nv">_context: </span><span class="kc">null</span>
+
+  <span class="nv">constructor: </span><span class="nf">(name, steps, callback)-&gt;</span>
+    <span class="vi">@name = </span><span class="nx">name</span>
+    <span class="vi">@_steps = </span><span class="nx">steps</span>
+    <span class="vi">@_callback = </span><span class="nx">callback</span>
+
+  <span class="nv">start: </span><span class="nf">(args) -&gt;</span>
+    <span class="nv">state = </span><span class="p">{}</span>
+    <span class="nv">context = </span><span class="k">new</span> <span class="nx">Context</span> <span class="nx">@</span><span class="p">,</span> <span class="nx">state</span>
+    <span class="nx">@runWithArgs</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">args</span>
+
+  <span class="nv">run: </span><span class="nf">(context, state) -&gt;</span>
+    <span class="nx">@runWithArgs</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">state</span><span class="p">.</span><span class="nx">args</span>
+    <span class="k">return</span>
+
+  <span class="nv">runWithArgs: </span><span class="nf">(context, state, args) -&gt;</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">nextTick</span> <span class="o">=&gt;</span>
+      <span class="nx">@resetState</span> <span class="nx">state</span>
+      <span class="nv">steps = </span><span class="nx">@_steps</span>
+      <span class="k">if</span> <span class="nx">context</span><span class="p">.</span><span class="nx">step</span> <span class="o">==</span> <span class="nx">steps</span><span class="p">.</span><span class="nx">length</span>
+        <span class="k">return</span> <span class="nx">@onSuccess</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">args</span>
+      <span class="k">try</span>
+        <span class="nx">steps</span><span class="p">[</span><span class="nx">context</span><span class="p">.</span><span class="nx">step</span><span class="p">].</span><span class="nx">apply</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">args</span>
+        <span class="nx">context</span><span class="p">.</span><span class="nx">step</span><span class="o">++</span>
+        <span class="nv">state.stepCompleted = </span><span class="kc">true</span>
+        <span class="k">if</span> <span class="nx">state</span><span class="p">.</span><span class="nx">lastCalled</span>
+          <span class="nx">@onSuccess</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">state</span><span class="p">.</span><span class="nx">args</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="nx">state</span><span class="p">.</span><span class="nx">nextCalled</span>
+          <span class="nx">@run</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">state</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="o">not</span> <span class="nx">state</span><span class="p">.</span><span class="nx">asyncCalled</span>
+          <span class="k">throw</span> <span class="k">new</span> <span class="nx">ChainError</span> <span class="s">&#39;Cannot chain functions without call `next` or `last` or `async`.&#39;</span>
+      <span class="k">catch</span> <span class="nx">err</span>
+        <span class="nx">@onFailure</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">err</span>
+      <span class="k">return</span>
+    <span class="k">return</span>
+
+  <span class="nv">resetState: </span><span class="nf">(state) -&gt;</span>
+    <span class="nv">state.args = </span><span class="p">[]</span>
+    <span class="nv">state.lastCalled = </span><span class="kc">false</span>
+    <span class="nv">state.nextCalled = </span><span class="kc">false</span>
+    <span class="nv">state.asyncCalled = </span><span class="kc">false</span>
+    <span class="nv">state.asyncCount = </span><span class="mi">0</span>
+    <span class="nv">state.asyncCompleteCount = </span><span class="mi">0</span>
+    <span class="nv">state.stepCompleted = </span><span class="kc">false</span>
+    <span class="k">return</span> <span class="nx">state</span>
+
+  <span class="nv">wait: </span><span class="nf">(context, state) -&gt;</span>
+    <span class="nx">unless</span> <span class="nx">state</span><span class="p">.</span><span class="nx">stepCompleted</span>
+      <span class="nx">process</span><span class="p">.</span><span class="nx">nextTick</span> <span class="o">=&gt;</span> <span class="nx">@wait</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">state</span>
+    <span class="k">else</span>
+      <span class="nx">@run</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">state</span>
+    <span class="k">return</span>
+
+  <span class="nv">onSuccess: </span><span class="nf">(context, args) -&gt;</span>
+    <span class="k">if</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">args</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">args</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>
+      <span class="nx">args</span><span class="p">.</span><span class="nx">unshift</span> <span class="kc">undefined</span>
+    <span class="k">else</span>
+      <span class="nv">args = </span><span class="kc">undefined</span>
+    <span class="nx">@onComplete</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">@_callback</span><span class="p">,</span> <span class="nx">args</span>
+    <span class="k">return</span>
+
+  <span class="nv">onFailure: </span><span class="nf">(context, err) -&gt;</span>
+    <span class="nx">@onComplete</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">@_callback</span><span class="p">,</span> <span class="p">[</span><span class="nx">err</span><span class="p">]</span>
+    <span class="k">return</span>
+
+  <span class="nv">onComplete: </span><span class="nf">(context, callback, args) -&gt;</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">nextTick</span> <span class="o">-&gt;</span> <span class="nx">callback</span><span class="p">.</span><span class="nx">apply</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">args</span>
+    <span class="k">return</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <h2>ryu.ChainError</h2>
+
+<pre><code>An error object named `ChainError`
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="nv">ChainError = exports.ChainError = </span><span class="nf">(msg, cause) -&gt;</span>
+  <span class="nb">Error</span><span class="p">.</span><span class="nx">call</span> <span class="nx">@</span><span class="p">,</span> <span class="nx">msg</span>
+  <span class="k">if</span> <span class="nx">msg</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="k">then</span> <span class="vi">@message = </span><span class="nx">msg</span>
+  <span class="k">if</span> <span class="nx">cause</span> <span class="o">!=</span> <span class="kc">undefined</span> <span class="k">then</span> <span class="vi">@cause = </span><span class="nx">cause</span>
+<span class="nv">ChainError.prototype = </span><span class="p">(</span><span class="o">-&gt;</span>
+  <span class="nv">Inheritor = </span><span class="o">-&gt;</span>
+  <span class="nv">Inheritor.prototype = </span><span class="nb">Error</span><span class="p">.</span><span class="nx">prototype</span>
+  <span class="k">new</span> <span class="nx">Inheritor</span><span class="p">()</span>
+<span class="p">)()</span>
+<span class="nv">ChainError::constructor = </span><span class="nx">ChainError</span>
+<span class="nv">ChainError::name = </span><span class="s">&#39;ChainError&#39;</span>
+<span class="nv">ChainError::message = </span><span class="s">&#39;&#39;</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
