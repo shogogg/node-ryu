@@ -1,0 +1,46 @@
+fs = require 'fs'
+util = require 'util'
+child_process = require 'child_process'
+
+SRC = "./src"
+DEST = "./lib"
+SPEC = "./spec"
+
+puts = util.puts
+print = util.print
+
+bin = __dirname + '/node_modules/.bin'
+coffee = bin + '/coffee'
+mocha = bin + '/mocha'
+docco = bin + '/docco'
+
+spawn = (cmd, args, callback) ->
+  child = child_process.spawn cmd, args
+  child.stdout.on 'data', (data) -> print data
+  child.stderr.on 'data', (data) -> print data
+  if callback then child.on 'exit', -> callback()
+
+docs = (callback) ->
+  fs.readdir 'src', (err, contents) ->
+    files = ("src/#{file}" for file in contents when /\.coffee$/.test file)
+    spawn docco, files, callback
+
+test = (callback) ->
+  options = [
+    '--colors'
+    '--reporter', 'spec'
+    '--compilers', 'coffee:coffee-script'
+    SPEC
+  ]
+  spawn mocha, options, callback
+
+watch = (callback) ->
+  spawn coffee, ['-cbwl', '-o', DEST, SRC], callback
+
+compile = (callback) ->
+  spawn coffee, ['-cbl', '-o', DEST, SRC], callback
+
+task 'docs', 'generate docs using docco', -> docs()
+task 'test', 'tests coffee file', -> compile -> test()
+task 'watch', 'watches and compiles coffee file', -> watch()
+task 'compile', 'compiles coffee file', -> compile()
